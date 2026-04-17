@@ -171,20 +171,24 @@ def comfy_image_to_temp_file(image_tensor, suffix: str = ".png") -> str:
         return temp_file.name
 
 
-def comfy_image_to_data_uri(image_tensor, image_format: str = "PNG") -> str:
+def comfy_image_to_data_uris(image_tensor, image_format: str = "PNG") -> list[str]:
     image_module = require_package("PIL", "pip install Pillow>=10.0.0", "Image")
     numpy = require_package("numpy", "pip install numpy>=1.26.0")
 
-    image_batch = image_tensor[0].detach().cpu().numpy()
-    clipped = numpy.clip(image_batch * 255.0, 0, 255).astype("uint8")
-    pil_image = image_module.fromarray(clipped)
-
-    buffer = io.BytesIO()
     normalized_format = image_format.upper()
-    pil_image.save(buffer, format=normalized_format)
-    encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
     mime_format = "jpeg" if normalized_format == "JPG" else normalized_format.lower()
-    return f"data:image/{mime_format};base64,{encoded}"
+    batch = image_tensor.detach().cpu().numpy()
+    data_uris: list[str] = []
+
+    for image_batch in batch:
+        clipped = numpy.clip(image_batch * 255.0, 0, 255).astype("uint8")
+        pil_image = image_module.fromarray(clipped)
+        buffer = io.BytesIO()
+        pil_image.save(buffer, format=normalized_format)
+        encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
+        data_uris.append(f"data:image/{mime_format};base64,{encoded}")
+
+    return data_uris
 
 
 def safe_remove_file(file_path: str | None):

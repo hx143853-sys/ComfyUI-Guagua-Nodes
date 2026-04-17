@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from ..api_utils import (
-    comfy_image_to_data_uri,
+    comfy_image_to_data_uris,
     create_ark_client,
     download_image_as_tensor,
     extract_first_image_url,
@@ -17,6 +17,7 @@ SEEDREAM_MODELS = [
 SEEDREAM_RESOLUTION_PRESETS = ["2K", "3K"]
 SEEDREAM_ASPECT_RATIOS = ["1:1", "4:3", "3:4", "16:9", "9:16", "3:2", "2:3", "21:9"]
 SEEDREAM_OUTPUT_FORMATS = ["png", "jpeg"]
+SEEDREAM_MAX_REFERENCE_IMAGES = 10
 
 SEEDREAM_SIZE_MAP = {
     "2K": {
@@ -98,7 +99,7 @@ class GuaguaSeedreamImageNode:
             if seed > 0:
                 request_payload["seed"] = int(seed)
             if image is not None:
-                request_payload["image"] = [comfy_image_to_data_uri(image, "PNG")]
+                request_payload["image"] = self._prepare_reference_images(image)
 
             response = client.images.generate(**request_payload)
             image_url = extract_first_image_url(response)
@@ -114,6 +115,16 @@ class GuaguaSeedreamImageNode:
             return SEEDREAM_SIZE_MAP[resolution][aspect_ratio]
         except KeyError as exc:
             raise ValueError(f"Unsupported Seedream size combination: {resolution} / {aspect_ratio}") from exc
+
+    def _prepare_reference_images(self, image) -> list[str]:
+        image_references = comfy_image_to_data_uris(image, "PNG")
+        if not image_references:
+            raise ValueError("Connected IMAGE input did not contain any frames.")
+        if len(image_references) > SEEDREAM_MAX_REFERENCE_IMAGES:
+            raise ValueError(
+                f"Seedream 5.0 currently supports at most {SEEDREAM_MAX_REFERENCE_IMAGES} reference images per request."
+            )
+        return image_references
 
 
 NODE_CLASS_MAPPINGS = {

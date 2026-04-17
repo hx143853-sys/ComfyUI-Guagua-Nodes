@@ -60,8 +60,8 @@ class SeedreamImageNodeTests(unittest.TestCase):
             "nodes.custom.seedream_image.download_image_as_tensor",
             return_value="tensor-image",
         ), patch(
-            "nodes.custom.seedream_image.comfy_image_to_data_uri",
-            return_value="data:image/png;base64,abc123",
+            "nodes.custom.seedream_image.comfy_image_to_data_uris",
+            return_value=["data:image/png;base64,abc123"],
         ):
             result = self.node.generate_image(
                 api_key="ark-key",
@@ -80,6 +80,42 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertEqual(captured["size"], "3072x3072")
         self.assertEqual(captured["image"], ["data:image/png;base64,abc123"])
         self.assertEqual(captured["output_format"], "jpeg")
+
+    def test_generate_image_supports_multi_image_batches(self):
+        captured: dict[str, object] = {}
+
+        class FakeImages:
+            def generate(self, **kwargs):
+                captured.update(kwargs)
+                return {"data": [{"url": "https://example.com/image.png"}]}
+
+        fake_client = SimpleNamespace(images=FakeImages())
+
+        with patch("nodes.custom.seedream_image.create_ark_client", return_value=fake_client), patch(
+            "nodes.custom.seedream_image.download_image_as_tensor",
+            return_value="tensor-image",
+        ), patch(
+            "nodes.custom.seedream_image.comfy_image_to_data_uris",
+            return_value=["data:image/png;base64,img1", "data:image/png;base64,img2"],
+        ):
+            result = self.node.generate_image(
+                api_key="ark-key",
+                prompt="merge two frog references into one poster",
+                model="doubao-seedream-5-0-260128",
+                resolution="2K",
+                aspect_ratio="4:3",
+                output_format="png",
+                seed=0,
+                guidance_scale=3.0,
+                watermark=False,
+                image="fake-image-batch",
+            )
+
+        self.assertEqual(result, ("tensor-image",))
+        self.assertEqual(
+            captured["image"],
+            ["data:image/png;base64,img1", "data:image/png;base64,img2"],
+        )
 
     def test_generate_image_raises_when_response_has_no_url(self):
         class FakeImages:
@@ -128,6 +164,16 @@ class SeedreamImageNodeTests(unittest.TestCase):
     def test_invalid_resolution_and_ratio_combination_raises_cleanly(self):
         with self.assertRaises(ValueError):
             self.node._resolve_size("8K", "1:1")
+
+    def test_too_many_reference_images_raises_cleanly(self):
+        with patch(
+            "nodes.custom.seedream_image.comfy_image_to_data_uris",
+            return_value=[f"data:image/png;base64,img{i}" for i in range(11)],
+        ):
+            with self.assertRaises(ValueError) as context:
+                self.node._prepare_reference_images("fake-image-batch")
+
+        self.assertIn("at most 10 reference images", str(context.exception))
 
 
 if __name__ == "__main__":
