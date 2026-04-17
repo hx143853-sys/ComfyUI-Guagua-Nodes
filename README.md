@@ -24,6 +24,12 @@ ComfyUI\custom_nodes\ComfyUI-Guagua-Nodes
 pip install -r requirements.txt
 ```
 
+建议使用正在运行 ComfyUI 的那套 Python，例如 Linux/AutoDL 常见环境可以写成：
+
+```bash
+python -m pip install -r requirements.txt
+```
+
 最后重启 ComfyUI。
 
 ## 节点说明

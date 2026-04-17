@@ -1,5 +1,5 @@
 volcengine-python-sdk[ark]>=4.0.6
 requests>=2.31.0
 Pillow>=10.0.0
-numpy>=1.26.0
+numpy>=1.26.0,<2
 dashscope>=1.19.0
