@@ -1,72 +1,107 @@
 # ComfyUI Guagua Nodes
 
-这是一个 ComfyUI 自定义节点项目骨架，所有节点在 ComfyUI 里显示时都会自动带上 `Guagua🐸` 前缀。
+这是一个 ComfyUI 自定义节点仓库，所有节点在 ComfyUI 中显示时都会自动带上 `Guagua🐸` 前缀。
 
-## 现在已有的示例节点
+## 当前节点
 
+- `Guagua🐸 Seedream 5.0 Image`
+- `Guagua🐸 Style Prompt Preset`
+- `Guagua🐸 Qwen Multimodal`
 - `Guagua🐸 Text Join`
 - `Guagua🐸 Prompt Builder`
 
-## 目录结构
-
-- `__init__.py`: ComfyUI 入口
-- `nodes/`: 节点注册器和节点实现
-- `scripts/new_guagua_node.ps1`: 新建节点模板脚本
-- `publish_to_github.ps1`: 提交并推送到 GitHub
-
 ## 安装方式
 
-把整个项目目录放到你的 ComfyUI `custom_nodes` 下面，例如：
+把整个项目目录放到你的 ComfyUI `custom_nodes` 目录下，例如：
 
 ```text
 ComfyUI\custom_nodes\ComfyUI-Guagua-Nodes
 ```
 
-然后重启 ComfyUI。
+然后在 ComfyUI 的 Python 环境中安装依赖：
 
-## 命名规则
-
-你以后新增节点时，只需要写节点自己的名称，比如 `Prompt Cleaner`。注册器会自动把它变成：
-
-```text
-Guagua🐸 Prompt Cleaner
+```powershell
+pip install -r requirements.txt
 ```
 
-这样可以避免以后忘记加前缀。
+最后重启 ComfyUI。
 
-## 新建一个节点
+## 节点说明
 
-示例：
+### 1. Guagua🐸 Seedream 5.0 Image
+
+用途：调用火山方舟 Seedream 5.0 模型文生图，输出 `IMAGE`。
+
+输入：
+
+- `api_key`: 火山方舟 API Key
+- `prompt`: 文生图提示词
+- `model`: Seedream 5.0 模型下拉
+- `size_preset`: 比例预设
+- `seed`: 随机种子，`0` 表示交给服务端随机
+- `guidance_scale`: 提示词引导强度
+- `watermark`: 是否加水印
+
+### 2. Guagua🐸 Style Prompt Preset
+
+用途：给基础提示词拼接风格化英文描述，输出 `STRING`。
+
+分类：
+
+- `空`
+- `真人摄影`
+- `动漫`
+- `3D`
+
+内置 24 个精选预设，界面是中文名称，输出为英文详细风格词。
+
+### 3. Guagua🐸 Qwen Multimodal
+
+用途：统一处理 Qwen 文本问答、图片分析、视频分析，输出 `STRING`。
+
+输入：
+
+- `api_key`: 阿里云百炼 DashScope API Key
+- `task_mode`: `text_chat` / `image_analysis` / `video_analysis`
+- `model`: 文本模型或视觉模型
+- `system_prompt`
+- `user_prompt`
+- 可选 `IMAGE` 输入
+- 可选 `image_path_or_url`
+- 可选 `video_path_or_url`
+
+规则：
+
+- `text_chat` 仅允许 `qwen-plus` / `qwen-turbo` / `qwen-max`
+- `image_analysis` 和 `video_analysis` 仅允许视觉模型
+- `image_analysis` 会优先使用连接进来的 `IMAGE`
+
+## 目录结构
+
+- `__init__.py`: ComfyUI 入口
+- `nodes/`: 节点、共享 API 工具、风格预设数据
+- `tests/`: 无网单元测试
+- `scripts/new_guagua_node.ps1`: 新建节点模板脚本
+- `publish_to_github.ps1`: 提交并推送到 GitHub
+
+## 测试
+
+运行全部单元测试：
+
+```powershell
+python -m unittest discover -s tests
+```
+
+## 推送工作流
+
+这个仓库已经连接到 GitHub，后续每完成一个节点都可以直接提交并推送：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\publish_to_github.ps1 -Message "Add Guagua🐸 node"
+```
+
+如果你想快速生成一个新节点模板：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\new_guagua_node.ps1 -NodeSlug prompt_cleaner -NodeTitle "Prompt Cleaner"
 ```
-
-如果你想创建完后立刻提交并推送：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\new_guagua_node.ps1 -NodeSlug prompt_cleaner -NodeTitle "Prompt Cleaner" -Publish
-```
-
-## 连接 GitHub 远程仓库
-
-第一次只需要做一次：
-
-```powershell
-git init -b main
-git remote add origin https://github.com/<你的用户名>/<你的仓库名>.git
-```
-
-如果你本机已经配置了 Git 凭据，后面执行下面这条就会自动提交并推送：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\publish_to_github.ps1 -Message "Add Guagua🐸 Prompt Cleaner"
-```
-
-## 推荐工作流
-
-1. 用 `scripts/new_guagua_node.ps1` 生成一个新节点模板。
-2. 编辑 `nodes/custom/<你的节点文件>.py`，补上真正逻辑。
-3. 跑一次 `publish_to_github.ps1`，把这个节点提交并推送到 GitHub。
-
-如果你愿意，我下一步可以继续帮你把第一个真正可用的图像类节点也做出来，并顺手接上你的 GitHub 仓库地址。
