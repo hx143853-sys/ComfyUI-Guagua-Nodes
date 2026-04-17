@@ -1,0 +1,194 @@
+[
+  {
+    "id": "photo_cinematic_portrait",
+    "category_cn": "真人摄影",
+    "label_cn": "电影人像",
+    "prompt_suffix_en": "cinematic portrait photography, dramatic key light, shallow depth of field, subtle film grain, realistic skin texture, controlled highlights, editorial composition",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "portrait", "cinematic"]
+  },
+  {
+    "id": "photo_fashion_studio",
+    "category_cn": "真人摄影",
+    "label_cn": "时尚棚拍",
+    "prompt_suffix_en": "high-fashion studio photography, softbox lighting, crisp fabric detail, polished makeup, clean backdrop, luxury magazine editorial styling",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "fashion", "studio"]
+  },
+  {
+    "id": "photo_street_documentary",
+    "category_cn": "真人摄影",
+    "label_cn": "街头纪实",
+    "prompt_suffix_en": "street documentary photography, candid moment, natural ambient light, authentic urban atmosphere, slight motion energy, realistic detail",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "street", "documentary"]
+  },
+  {
+    "id": "photo_travel_landscape",
+    "category_cn": "真人摄影",
+    "label_cn": "旅行风光",
+    "prompt_suffix_en": "travel landscape photography, expansive vista, natural light, atmospheric depth, vivid yet realistic color grading, detailed environmental textures",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "travel", "landscape"]
+  },
+  {
+    "id": "photo_product_still_life",
+    "category_cn": "真人摄影",
+    "label_cn": "产品静物",
+    "prompt_suffix_en": "product still life photography, controlled studio lighting, pristine surfaces, premium commercial composition, sharp focus, clean reflections",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "product", "commercial"]
+  },
+  {
+    "id": "photo_food",
+    "category_cn": "真人摄影",
+    "label_cn": "美食摄影",
+    "prompt_suffix_en": "professional food photography, appetizing textures, soft directional lighting, shallow depth of field, plated presentation, natural color balance",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "food", "commercial"]
+  },
+  {
+    "id": "photo_bw_documentary",
+    "category_cn": "真人摄影",
+    "label_cn": "黑白纪实",
+    "prompt_suffix_en": "black and white documentary photography, rich tonal contrast, nuanced grayscale, authentic emotion, textured lighting, timeless composition",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "black-and-white", "documentary"]
+  },
+  {
+    "id": "photo_vintage_film",
+    "category_cn": "真人摄影",
+    "label_cn": "复古胶片",
+    "prompt_suffix_en": "vintage analog film photography, warm tones, organic grain, slightly faded palette, nostalgic atmosphere, natural imperfections",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder, bash-j/mikey_nodes, and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["photography", "film", "vintage"]
+  },
+  {
+    "id": "anime_cel_shaded",
+    "category_cn": "动漫",
+    "label_cn": "赛璐璐动漫",
+    "prompt_suffix_en": "clean cel-shaded anime illustration, bold linework, vibrant colors, expressive character design, polished highlights, crisp silhouette",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "cel-shaded", "illustration"]
+  },
+  {
+    "id": "anime_girl_illustration",
+    "category_cn": "动漫",
+    "label_cn": "少女插画",
+    "prompt_suffix_en": "delicate anime girl illustration, soft pastel palette, gentle lighting, elegant costume detail, airy composition, dreamy mood",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "girl", "soft"]
+  },
+  {
+    "id": "anime_shonen_action",
+    "category_cn": "动漫",
+    "label_cn": "热血少年漫",
+    "prompt_suffix_en": "dynamic shonen manga illustration, intense action pose, dramatic speed lines, punchy contrast, heroic energy, bold composition",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "shonen", "action"]
+  },
+  {
+    "id": "anime_cinematic",
+    "category_cn": "动漫",
+    "label_cn": "电影感动漫",
+    "prompt_suffix_en": "cinematic anime frame, dramatic lighting, atmospheric color grading, detailed background storytelling, strong depth, filmic composition",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "cinematic", "storytelling"]
+  },
+  {
+    "id": "anime_mecha_scifi",
+    "category_cn": "动漫",
+    "label_cn": "机甲科幻",
+    "prompt_suffix_en": "mecha sci-fi anime illustration, intricate mechanical detail, futuristic panels, glowing accents, high contrast lighting, dynamic perspective",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "mecha", "sci-fi"]
+  },
+  {
+    "id": "anime_chinese_fantasy",
+    "category_cn": "动漫",
+    "label_cn": "国风二次元",
+    "prompt_suffix_en": "Chinese fantasy anime illustration, flowing garments, ornate traditional motifs, lyrical lighting, elegant brush-inspired detail, mythic atmosphere",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "chinese-style", "fantasy"]
+  },
+  {
+    "id": "anime_chibi",
+    "category_cn": "动漫",
+    "label_cn": "Q版萌系",
+    "prompt_suffix_en": "chibi anime illustration, cute proportions, playful expression, soft rounded shapes, bright cheerful palette, charming simplicity",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "chibi", "cute"]
+  },
+  {
+    "id": "anime_dark_fantasy",
+    "category_cn": "动漫",
+    "label_cn": "暗黑奇幻动漫",
+    "prompt_suffix_en": "dark fantasy anime illustration, moody lighting, gothic costume detail, ominous environment, rich shadow structure, dramatic atmosphere",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "dark-fantasy", "gothic"]
+  },
+  {
+    "id": "3d_animated_film",
+    "category_cn": "3D",
+    "label_cn": "卡通电影3D",
+    "prompt_suffix_en": "stylized 3D animated film render, expressive characters, polished materials, cinematic lighting, family animation appeal, clean composition",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "animated", "film"]
+  },
+  {
+    "id": "3d_aaa_character",
+    "category_cn": "3D",
+    "label_cn": "AAA游戏角色",
+    "prompt_suffix_en": "AAA game character render, high-detail armor and materials, dramatic rim light, realistic shading, heroic stance, premium production quality",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "game", "character"]
+  },
+  {
+    "id": "3d_realistic_cg",
+    "category_cn": "3D",
+    "label_cn": "写实CG",
+    "prompt_suffix_en": "photorealistic CGI render, accurate materials, ray-traced lighting, precise reflections, clean global illumination, studio-grade detail",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "cgi", "realistic"]
+  },
+  {
+    "id": "3d_low_poly",
+    "category_cn": "3D",
+    "label_cn": "低多边形",
+    "prompt_suffix_en": "low poly 3D art, simplified geometric forms, flat shaded surfaces, clean silhouettes, stylized scene design, bold color blocking",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "low-poly", "stylized"]
+  },
+  {
+    "id": "3d_isometric_scene",
+    "category_cn": "3D",
+    "label_cn": "等距场景",
+    "prompt_suffix_en": "isometric 3D scene, miniature composition, readable layout, clean edges, carefully arranged props, polished toy-like lighting",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "isometric", "scene"]
+  },
+  {
+    "id": "3d_clay_figure",
+    "category_cn": "3D",
+    "label_cn": "黏土手办",
+    "prompt_suffix_en": "clay figurine 3D render, handcrafted texture, soft rounded forms, playful material detail, miniature collectible look, studio lighting",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "clay", "figurine"]
+  },
+  {
+    "id": "3d_product_visualization",
+    "category_cn": "3D",
+    "label_cn": "产品可视化",
+    "prompt_suffix_en": "3D product visualization, premium industrial design lighting, realistic materials, clean reflections, commercial presentation, precise contours",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "product", "commercial"]
+  },
+  {
+    "id": "3d_miniature_toy",
+    "category_cn": "3D",
+    "label_cn": "微缩玩具3D",
+    "prompt_suffix_en": "miniature toy diorama render, tilt-shift feel, tiny prop detail, playful scale cues, soft cinematic lighting, collectible display quality",
+    "source": "Rewritten from ComfyAssets/kiko-flux2-prompt-builder and bash-j/mikey_nodes",
+    "tags": ["3d", "miniature", "toy"]
+  }
+]
