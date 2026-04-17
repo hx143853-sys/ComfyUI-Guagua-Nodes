@@ -136,6 +136,46 @@
     "tags": ["anime", "american-comic", "comic-book"]
   },
   {
+    "id": "anime_superhero_comic",
+    "category_cn": "动漫",
+    "label_cn": "超级英雄美漫",
+    "prompt_suffix_en": "superhero comic illustration, powerful anatomy, bold contour inking, explosive action pose, dramatic backlight, high-energy splash page, vivid primary color contrast",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "superhero", "american-comic"]
+  },
+  {
+    "id": "anime_comic_cover",
+    "category_cn": "动漫",
+    "label_cn": "漫画封面",
+    "prompt_suffix_en": "American comic cover art, striking focal pose, dramatic perspective, polished inking, bold title-space composition, high-impact shading, collectible issue cover feel",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "cover-art", "american-comic"]
+  },
+  {
+    "id": "anime_noir_comic",
+    "category_cn": "动漫",
+    "label_cn": "黑色漫画",
+    "prompt_suffix_en": "comic noir illustration, stark shadows, hard-boiled atmosphere, gritty city mood, heavy black inks, moody rim light, suspenseful panel composition",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "noir", "comic-book"]
+  },
+  {
+    "id": "anime_silver_age_comic",
+    "category_cn": "动漫",
+    "label_cn": "复古银时代美漫",
+    "prompt_suffix_en": "silver age American comic illustration, vintage print texture, clean heroic linework, retro flat colors, classic panel drama, nostalgic pulp energy",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "silver-age", "retro-comic"]
+  },
+  {
+    "id": "anime_indie_comic",
+    "category_cn": "动漫",
+    "label_cn": "独立漫画风",
+    "prompt_suffix_en": "indie comic illustration, stylized brush inking, expressive character acting, handcrafted texture, offbeat color palette, graphic novel storytelling mood",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "indie-comic", "graphic-novel"]
+  },
+  {
     "id": "3d_animated_film",
     "category_cn": "3D",
     "label_cn": "卡通电影3D",
