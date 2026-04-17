@@ -36,19 +36,19 @@ python -m pip install -r requirements.txt
 
 ### 1. Guagua🐸 Seedream 5.0 Image
 
-用途：调用火山方舟 Seedream 5.0 模型做文生图、单图编辑或多图融合，输出 `IMAGE`。
+用途：调用火山方舟 Seedream 5.0 模型做文生图、图生图或多图融合，输出 `IMAGE`。
 
 输入：
 
 - `api_key`: 火山方舟 API Key
 - `prompt`: 文生图提示词
 - `model`: Seedream 5.0 模型下拉
-- 可选 `IMAGE` 输入：不连线时是文生图，连线时会把输入图片转成 Seedream 可接受的 base64 data URI 作为参考图；如果上游传入的是批量 `IMAGE`，会自动按多图融合方式一起提交，当前上限为 10 张参考图
-- `resolution`: 分辨率档位，当前支持 `2K` / `3K`
-- `aspect_ratio`: 比例预设，节点会自动换算成请求里的真实 `size`
+- 可选 `IMAGE` 输入：不连线时是文生图；连 1 张图时按图生图提交；连入批量 `IMAGE` 时按多图融合提交，当前上限为 10 张参考图
+- `resolution`: 会直接作为请求里的 `size` 提交，当前支持 `2K` / `3K`
+- `aspect_ratio`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
 - `output_format`: 输出图片格式，当前支持 `png` / `jpeg`
-- `seed`: 随机种子，`0` 表示交给服务端随机
-- `guidance_scale`: 提示词引导强度
+- `seed`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
+- `guidance_scale`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
 - `watermark`: 是否加水印
 
 ### 2. Guagua🐸 Style Prompt Preset

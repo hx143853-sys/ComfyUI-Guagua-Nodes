@@ -40,8 +40,8 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertEqual(result, ("tensor-image",))
         self.assertEqual(captured["model"], "doubao-seedream-5-0-lite-260128")
         self.assertEqual(captured["prompt"], "a frog astronaut")
-        self.assertEqual(captured["size"], "2848x1600")
-        self.assertEqual(captured["seed"], 123)
+        self.assertEqual(captured["size"], "2K")
+        self.assertNotIn("seed", captured)
         self.assertEqual(captured["watermark"], True)
         self.assertEqual(captured["output_format"], "png")
 
@@ -76,9 +76,10 @@ class SeedreamImageNodeTests(unittest.TestCase):
             )
 
         self.assertEqual(result, ("tensor-image",))
-        self.assertEqual(captured["size"], "3072x3072")
-        self.assertEqual(captured["image"], ["data:image/png;base64,abc123"])
+        self.assertEqual(captured["size"], "3K")
+        self.assertEqual(captured["image"], "data:image/png;base64,abc123")
         self.assertEqual(captured["output_format"], "jpeg")
+        self.assertNotIn("sequential_image_generation", captured)
 
     def test_generate_image_supports_multi_image_batches(self):
         captured: dict[str, object] = {}
@@ -115,6 +116,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             captured["image"],
             ["data:image/png;base64,img1", "data:image/png;base64,img2"],
         )
+        self.assertEqual(captured["sequential_image_generation"], "disabled")
 
     def test_generate_image_raises_when_response_has_no_url(self):
         class FakeImages:
@@ -160,10 +162,6 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertIn("Seedream 5.0 request failed", str(context.exception))
         self.assertIn("Invalid API key", str(context.exception))
 
-    def test_invalid_resolution_and_ratio_combination_raises_cleanly(self):
-        with self.assertRaises(ValueError):
-            self.node._resolve_size("8K", "1:1")
-
     def test_too_many_reference_images_raises_cleanly(self):
         with patch(
             "nodes.custom.seedream_image.comfy_image_to_data_uris",
@@ -173,6 +171,15 @@ class SeedreamImageNodeTests(unittest.TestCase):
                 self.node._prepare_reference_images("fake-image-batch")
 
         self.assertIn("at most 10 reference images", str(context.exception))
+
+    def test_single_reference_image_returns_string_payload(self):
+        with patch(
+            "nodes.custom.seedream_image.comfy_image_to_data_uris",
+            return_value=["data:image/png;base64,single"],
+        ):
+            payload = self.node._prepare_reference_images("fake-image")
+
+        self.assertEqual(payload, "data:image/png;base64,single")
 
 
 if __name__ == "__main__":

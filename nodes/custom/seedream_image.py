@@ -19,29 +19,6 @@ SEEDREAM_ASPECT_RATIOS = ["1:1", "4:3", "3:4", "16:9", "9:16", "3:2", "2:3", "21
 SEEDREAM_OUTPUT_FORMATS = ["png", "jpeg"]
 SEEDREAM_MAX_REFERENCE_IMAGES = 10
 
-SEEDREAM_SIZE_MAP = {
-    "2K": {
-        "1:1": "2048x2048",
-        "4:3": "2304x1728",
-        "3:4": "1728x2304",
-        "16:9": "2848x1600",
-        "9:16": "1600x2848",
-        "3:2": "2496x1664",
-        "2:3": "1664x2496",
-        "21:9": "3136x1344",
-    },
-    "3K": {
-        "1:1": "3072x3072",
-        "4:3": "3456x2592",
-        "3:4": "2592x3456",
-        "16:9": "4096x2304",
-        "9:16": "2304x4096",
-        "3:2": "3744x2496",
-        "2:3": "2496x3744",
-        "21:9": "4704x2016",
-    },
-}
-
 
 class GuaguaSeedreamImageNode:
     CATEGORY = "Guagua🐸/Image"
@@ -87,18 +64,18 @@ class GuaguaSeedreamImageNode:
 
         try:
             client = create_ark_client(api_key)
-            size = self._resolve_size(resolution, aspect_ratio)
             request_payload = {
                 "model": model,
                 "prompt": clean_prompt,
-                "size": size,
+                "size": resolution,
                 "watermark": bool(watermark),
                 "output_format": output_format,
             }
-            if seed > 0:
-                request_payload["seed"] = int(seed)
             if image is not None:
-                request_payload["image"] = self._prepare_reference_images(image)
+                image_payload = self._prepare_reference_images(image)
+                request_payload["image"] = image_payload
+                if isinstance(image_payload, list):
+                    request_payload["sequential_image_generation"] = "disabled"
 
             response = client.images.generate(**request_payload)
             image_url = extract_first_image_url(response)
@@ -109,13 +86,7 @@ class GuaguaSeedreamImageNode:
         except Exception as exc:
             raise RuntimeError(format_api_exception("Seedream 5.0", exc)) from exc
 
-    def _resolve_size(self, resolution: str, aspect_ratio: str) -> str:
-        try:
-            return SEEDREAM_SIZE_MAP[resolution][aspect_ratio]
-        except KeyError as exc:
-            raise ValueError(f"Unsupported Seedream size combination: {resolution} / {aspect_ratio}") from exc
-
-    def _prepare_reference_images(self, image) -> list[str]:
+    def _prepare_reference_images(self, image) -> str | list[str]:
         image_references = comfy_image_to_data_uris(image, "PNG")
         if not image_references:
             raise ValueError("Connected IMAGE input did not contain any frames.")
@@ -123,6 +94,8 @@ class GuaguaSeedreamImageNode:
             raise ValueError(
                 f"Seedream 5.0 currently supports at most {SEEDREAM_MAX_REFERENCE_IMAGES} reference images per request."
             )
+        if len(image_references) == 1:
+            return image_references[0]
         return image_references
 
 
