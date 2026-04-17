@@ -36,14 +36,17 @@ python -m pip install -r requirements.txt
 
 ### 1. Guagua🐸 Seedream 5.0 Image
 
-用途：调用火山方舟 Seedream 5.0 模型文生图，输出 `IMAGE`。
+用途：调用火山方舟 Seedream 5.0 模型做文生图或单图编辑，输出 `IMAGE`。
 
 输入：
 
 - `api_key`: 火山方舟 API Key
 - `prompt`: 文生图提示词
 - `model`: Seedream 5.0 模型下拉
-- `size_preset`: 比例预设
+- 可选 `IMAGE` 输入：不连线时是文生图，连线时会把输入图片转成 Seedream 可接受的 base64 data URI 作为参考图
+- `resolution`: 分辨率档位，当前支持 `2K` / `3K`
+- `aspect_ratio`: 比例预设，节点会自动换算成请求里的真实 `size`
+- `output_format`: 输出图片格式，当前支持 `png` / `jpeg`
 - `seed`: 随机种子，`0` 表示交给服务端随机
 - `guidance_scale`: 提示词引导强度
 - `watermark`: 是否加水印

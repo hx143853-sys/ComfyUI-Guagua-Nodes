@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import io
 import os
 import tempfile
@@ -168,6 +169,22 @@ def comfy_image_to_temp_file(image_tensor, suffix: str = ".png") -> str:
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_file:
         pil_image.save(temp_file.name)
         return temp_file.name
+
+
+def comfy_image_to_data_uri(image_tensor, image_format: str = "PNG") -> str:
+    image_module = require_package("PIL", "pip install Pillow>=10.0.0", "Image")
+    numpy = require_package("numpy", "pip install numpy>=1.26.0")
+
+    image_batch = image_tensor[0].detach().cpu().numpy()
+    clipped = numpy.clip(image_batch * 255.0, 0, 255).astype("uint8")
+    pil_image = image_module.fromarray(clipped)
+
+    buffer = io.BytesIO()
+    normalized_format = image_format.upper()
+    pil_image.save(buffer, format=normalized_format)
+    encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    mime_format = "jpeg" if normalized_format == "JPG" else normalized_format.lower()
+    return f"data:image/{mime_format};base64,{encoded}"
 
 
 def safe_remove_file(file_path: str | None):
