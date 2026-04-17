@@ -91,7 +91,6 @@ class GuaguaSeedreamImageNode:
                 "model": model,
                 "prompt": clean_prompt,
                 "size": size,
-                "n": 1,
                 "guidance_scale": float(guidance_scale),
                 "watermark": bool(watermark),
                 "output_format": output_format,
@@ -99,7 +98,7 @@ class GuaguaSeedreamImageNode:
             if seed > 0:
                 request_payload["seed"] = int(seed)
             if image is not None:
-                request_payload["image"] = comfy_image_to_data_uri(image, "PNG")
+                request_payload["image"] = [comfy_image_to_data_uri(image, "PNG")]
 
             response = client.images.generate(**request_payload)
             image_url = extract_first_image_url(response)

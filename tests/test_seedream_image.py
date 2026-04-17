@@ -41,7 +41,6 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertEqual(captured["model"], "doubao-seedream-5-0-lite-260128")
         self.assertEqual(captured["prompt"], "a frog astronaut")
         self.assertEqual(captured["size"], "2848x1600")
-        self.assertEqual(captured["n"], 1)
         self.assertEqual(captured["seed"], 123)
         self.assertEqual(captured["guidance_scale"], 3.5)
         self.assertEqual(captured["watermark"], True)
@@ -79,7 +78,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
 
         self.assertEqual(result, ("tensor-image",))
         self.assertEqual(captured["size"], "3072x3072")
-        self.assertEqual(captured["image"], "data:image/png;base64,abc123")
+        self.assertEqual(captured["image"], ["data:image/png;base64,abc123"])
         self.assertEqual(captured["output_format"], "jpeg")
 
     def test_generate_image_raises_when_response_has_no_url(self):
