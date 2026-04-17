@@ -42,7 +42,6 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertEqual(captured["prompt"], "a frog astronaut")
         self.assertEqual(captured["size"], "2848x1600")
         self.assertEqual(captured["seed"], 123)
-        self.assertEqual(captured["guidance_scale"], 3.5)
         self.assertEqual(captured["watermark"], True)
         self.assertEqual(captured["output_format"], "png")
 

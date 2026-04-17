@@ -92,7 +92,6 @@ class GuaguaSeedreamImageNode:
                 "model": model,
                 "prompt": clean_prompt,
                 "size": size,
-                "guidance_scale": float(guidance_scale),
                 "watermark": bool(watermark),
                 "output_format": output_format,
             }
