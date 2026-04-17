@@ -12,7 +12,7 @@ class StylePromptPresetNodeTests(unittest.TestCase):
 
     def test_style_library_contains_expected_number_of_presets(self):
         presets = load_style_presets()
-        self.assertEqual(len(presets), 24)
+        self.assertEqual(len(presets), 25)
 
     def test_empty_category_or_preset_passthroughs_base_prompt(self):
         self.assertEqual(
@@ -28,6 +28,11 @@ class StylePromptPresetNodeTests(unittest.TestCase):
         result = self.node.build_prompt("a frog astronaut", "动漫", "电影感动漫")
         self.assertIn("a frog astronaut", result[0])
         self.assertIn("cinematic anime frame", result[0])
+
+    def test_american_comic_style_is_available(self):
+        result = self.node.build_prompt("a frog superhero", "动漫", "美漫风格")
+        self.assertIn("a frog superhero", result[0])
+        self.assertIn("American comic book illustration", result[0])
 
     def test_category_preset_mismatch_raises_cleanly(self):
         with self.assertRaises(KeyError):

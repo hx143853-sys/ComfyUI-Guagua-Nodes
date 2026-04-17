@@ -128,6 +128,14 @@
     "tags": ["anime", "dark-fantasy", "gothic"]
   },
   {
+    "id": "anime_american_comic",
+    "category_cn": "动漫",
+    "label_cn": "美漫风格",
+    "prompt_suffix_en": "American comic book illustration, bold inked outlines, dynamic panel energy, dramatic foreshortening, halftone shading, punchy color separation, heroic composition, cover art impact",
+    "source": "Rewritten from bash-j/mikey_nodes and monju252/AI-Prompts-for-Portrait-Prompts",
+    "tags": ["anime", "american-comic", "comic-book"]
+  },
+  {
     "id": "3d_animated_film",
     "category_cn": "3D",
     "label_cn": "卡通电影3D",
