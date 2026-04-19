@@ -5,6 +5,7 @@
 ## 当前节点
 
 - `Guagua🐸 Seedream 5.0 Image`
+- `Guagua🐸 Seedream Lite / 4.5 Image`
 - `Guagua🐸 Style Prompt Preset`
 - `Guagua🐸 Qwen Multimodal`
 - `Guagua🐸 Text Join`
@@ -42,7 +43,7 @@ python -m pip install -r requirements.txt
 
 - `api_key`: 火山方舟 API Key
 - `prompt`: 文生图提示词
-- `model`: Seedream 模型下拉，当前包含 `doubao-seedream-5-0-lite-260128`、`doubao-seedream-5-0-260128`、`doubao-seedream-4-5-251128`
+- 固定模型：`doubao-seedream-5-0-260128`
 - 可选 `IMAGE` 输入：不连线时是文生图；连 1 张图时按图生图提交；连入批量 `IMAGE` 时按多图融合提交，当前上限为 10 张参考图
 - `resolution`: 会直接作为请求里的 `size` 提交，当前支持 `2K` / `3K`
 - `aspect_ratio`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
@@ -51,7 +52,24 @@ python -m pip install -r requirements.txt
 - `guidance_scale`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
 - `watermark`: 是否加水印
 
-### 2. Guagua🐸 Style Prompt Preset
+### 2. Guagua🐸 Seedream Lite / 4.5 Image
+
+用途：调用火山方舟 `doubao-seedream-5-0-lite-260128` 或 `doubao-seedream-4-5-251128` 做文生图、图生图或多图融合，输出 `IMAGE`。
+
+输入：
+
+- `api_key`: 火山方舟 API Key
+- `prompt`: 文生图提示词
+- `model`: 仅支持 `doubao-seedream-5-0-lite-260128`、`doubao-seedream-4-5-251128`
+- 可选 `IMAGE` 输入：不连线时是文生图；连 1 张图时按图生图提交；连入批量 `IMAGE` 时按多图融合提交，当前上限为 10 张参考图
+- `resolution`: 会直接作为请求里的 `size` 提交，当前支持 `2K` / `3K`
+- `aspect_ratio`: 当前仅为兼容旧工作流保留，不再参与请求体
+- `output_format`: `5.0-lite` 会发送该字段；`4.5` 默认不发送
+- `seed`: 当前仅为兼容旧工作流保留，不再参与请求体
+- `guidance_scale`: 当前仅为兼容旧工作流保留，不再参与请求体
+- `watermark`: 是否加水印
+
+### 3. Guagua🐸 Style Prompt Preset
 
 用途：给基础提示词拼接风格化英文描述，输出 `STRING`。
 
@@ -73,7 +91,7 @@ python -m pip install -r requirements.txt
 - `动漫 / 复古银时代美漫`
 - `动漫 / 独立漫画风`
 
-### 3. Guagua🐸 Qwen Multimodal
+### 4. Guagua🐸 Qwen Multimodal
 
 用途：统一处理 Qwen 文本问答、图片分析、视频分析，输出 `STRING`。
 

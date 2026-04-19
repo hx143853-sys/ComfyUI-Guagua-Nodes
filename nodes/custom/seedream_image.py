@@ -11,44 +11,47 @@ from ..api_utils import (
 )
 
 
-SEEDREAM_MODELS = [
-    "doubao-seedream-5-0-lite-260128",
-    "doubao-seedream-5-0-260128",
-    "doubao-seedream-4-5-251128",
-]
-
 SEEDREAM_RESOLUTION_PRESETS = ["2K", "3K"]
 SEEDREAM_ASPECT_RATIOS = ["1:1", "4:3", "3:4", "16:9", "9:16", "3:2", "2:3", "21:9"]
 SEEDREAM_OUTPUT_FORMATS = ["png", "jpeg"]
 SEEDREAM_MAX_REFERENCE_IMAGES = 10
 SEEDREAM_MAX_RETRIES = 3
 SEEDREAM_RETRY_DELAY_SECONDS = 2.0
+SEEDREAM_50_MODEL = "doubao-seedream-5-0-260128"
+SEEDREAM_LITE_45_MODELS = [
+    "doubao-seedream-5-0-lite-260128",
+    "doubao-seedream-4-5-251128",
+]
 SEEDREAM_OUTPUT_FORMAT_MODELS = {
     "doubao-seedream-5-0-lite-260128",
     "doubao-seedream-5-0-260128",
 }
 
 
-class GuaguaSeedreamImageNode:
+class _BaseGuaguaSeedreamImageNode:
     CATEGORY = "Guagua🐸/Image"
     RETURN_TYPES = ("IMAGE",)
     RETURN_NAMES = ("image",)
     FUNCTION = "generate_image"
+    FIXED_MODEL: str | None = None
+    MODEL_OPTIONS: list[str] | None = None
 
     @classmethod
     def INPUT_TYPES(cls):
+        required = {
+            "api_key": ("STRING", {"default": "", "multiline": False}),
+            "prompt": ("STRING", {"default": "", "multiline": True}),
+            "resolution": (SEEDREAM_RESOLUTION_PRESETS, {"default": "2K"}),
+            "aspect_ratio": (SEEDREAM_ASPECT_RATIOS, {"default": "1:1"}),
+            "output_format": (SEEDREAM_OUTPUT_FORMATS, {"default": "png"}),
+            "seed": ("INT", {"default": 0, "min": 0, "max": 2147483647}),
+            "guidance_scale": ("FLOAT", {"default": 2.5, "min": 0.0, "max": 20.0, "step": 0.1}),
+            "watermark": ("BOOLEAN", {"default": True}),
+        }
+        if cls.FIXED_MODEL is None and cls.MODEL_OPTIONS:
+            required["model"] = (cls.MODEL_OPTIONS, {"default": cls.MODEL_OPTIONS[0]})
         return {
-            "required": {
-                "api_key": ("STRING", {"default": "", "multiline": False}),
-                "prompt": ("STRING", {"default": "", "multiline": True}),
-                "model": (SEEDREAM_MODELS, {"default": SEEDREAM_MODELS[0]}),
-                "resolution": (SEEDREAM_RESOLUTION_PRESETS, {"default": "2K"}),
-                "aspect_ratio": (SEEDREAM_ASPECT_RATIOS, {"default": "1:1"}),
-                "output_format": (SEEDREAM_OUTPUT_FORMATS, {"default": "png"}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 2147483647}),
-                "guidance_scale": ("FLOAT", {"default": 2.5, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "watermark": ("BOOLEAN", {"default": True}),
-            },
+            "required": required,
             "optional": {
                 "image": ("IMAGE",),
             }
@@ -58,7 +61,6 @@ class GuaguaSeedreamImageNode:
         self,
         api_key: str,
         prompt: str,
-        model: str,
         resolution: str,
         aspect_ratio: str,
         output_format: str,
@@ -66,18 +68,22 @@ class GuaguaSeedreamImageNode:
         guidance_scale: float,
         watermark: bool,
         image=None,
+        model: str | None = None,
     ):
         clean_prompt = prompt.strip()
         if not clean_prompt:
             raise ValueError("prompt cannot be empty.")
+        resolved_model = self.FIXED_MODEL or model
+        if not resolved_model:
+            raise ValueError("model cannot be empty.")
 
         request_payload = {
-            "model": model,
+            "model": resolved_model,
             "prompt": clean_prompt,
             "size": resolution,
             "watermark": bool(watermark),
         }
-        if model in SEEDREAM_OUTPUT_FORMAT_MODELS:
+        if resolved_model in SEEDREAM_OUTPUT_FORMAT_MODELS:
             request_payload["output_format"] = output_format
         if image is not None:
             image_payload = self._prepare_reference_images(image)
@@ -147,10 +153,20 @@ class GuaguaSeedreamImageNode:
         return None
 
 
+class GuaguaSeedream50ImageNode(_BaseGuaguaSeedreamImageNode):
+    FIXED_MODEL = SEEDREAM_50_MODEL
+
+
+class GuaguaSeedreamLite45ImageNode(_BaseGuaguaSeedreamImageNode):
+    MODEL_OPTIONS = SEEDREAM_LITE_45_MODELS
+
+
 NODE_CLASS_MAPPINGS = {
-    "Seedream 5.0 Image": GuaguaSeedreamImageNode,
+    "Seedream 5.0 Image": GuaguaSeedream50ImageNode,
+    "Seedream Lite / 4.5 Image": GuaguaSeedreamLite45ImageNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Seedream 5.0 Image": "Seedream 5.0 Image",
+    "Seedream Lite / 4.5 Image": "Seedream Lite / 4.5 Image",
 }
