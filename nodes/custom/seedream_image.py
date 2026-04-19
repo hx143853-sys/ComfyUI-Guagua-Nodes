@@ -4,10 +4,10 @@ import time
 
 from ..api_utils import (
     comfy_image_to_data_uris,
-    create_ark_client,
     download_image_as_tensor,
     extract_first_image_url,
     format_api_exception,
+    post_ark_json,
 )
 
 
@@ -23,6 +23,10 @@ SEEDREAM_OUTPUT_FORMATS = ["png", "jpeg"]
 SEEDREAM_MAX_REFERENCE_IMAGES = 10
 SEEDREAM_MAX_RETRIES = 3
 SEEDREAM_RETRY_DELAY_SECONDS = 2.0
+SEEDREAM_OUTPUT_FORMAT_MODELS = {
+    "doubao-seedream-5-0-lite-260128",
+    "doubao-seedream-5-0-260128",
+}
 
 
 class GuaguaSeedreamImageNode:
@@ -67,17 +71,14 @@ class GuaguaSeedreamImageNode:
         if not clean_prompt:
             raise ValueError("prompt cannot be empty.")
 
-        try:
-            client = create_ark_client(api_key)
-        except Exception as exc:
-            raise RuntimeError(format_api_exception("Seedream 5.0", exc)) from exc
         request_payload = {
             "model": model,
             "prompt": clean_prompt,
             "size": resolution,
             "watermark": bool(watermark),
-            "output_format": output_format,
         }
+        if model in SEEDREAM_OUTPUT_FORMAT_MODELS:
+            request_payload["output_format"] = output_format
         if image is not None:
             image_payload = self._prepare_reference_images(image)
             request_payload["image"] = image_payload
@@ -87,7 +88,7 @@ class GuaguaSeedreamImageNode:
         last_exception = None
         for attempt in range(1, SEEDREAM_MAX_RETRIES + 1):
             try:
-                response = client.images.generate(**request_payload)
+                response = post_ark_json(api_key, "images/generations", request_payload)
                 image_url = extract_first_image_url(response)
                 if not image_url:
                     raise RuntimeError("Seedream returned no image URL.")

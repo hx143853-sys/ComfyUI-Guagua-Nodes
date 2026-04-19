@@ -54,6 +54,33 @@ def create_ark_client(api_key: str, base_url: str = DEFAULT_ARK_BASE_URL):
     return ark_cls(api_key=ensure_text(api_key, "api_key"), base_url=base_url)
 
 
+def post_ark_json(
+    api_key: str,
+    endpoint_path: str,
+    payload: dict,
+    timeout: int = 300,
+    base_url: str = DEFAULT_ARK_BASE_URL,
+):
+    requests = require_package("requests", "pip install requests>=2.31.0")
+    url = f"{base_url.rstrip('/')}/{endpoint_path.lstrip('/')}"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {ensure_text(api_key, 'api_key')}",
+    }
+
+    response = requests.post(url, headers=headers, json=payload, timeout=timeout)
+    if response.ok:
+        return response.json()
+
+    try:
+        error_body = response.json()
+    except Exception:
+        response.raise_for_status()
+        raise RuntimeError("Unexpected error while calling Ark API.")
+
+    raise requests.HTTPError(f"Error code: {response.status_code} - {error_body}", response=response)
+
+
 def configure_dashscope(api_key: str, base_url: str = DEFAULT_DASHSCOPE_BASE_URL):
     dashscope = require_package("dashscope", "pip install dashscope>=1.22.0")
     dashscope.api_key = ensure_text(api_key, "api_key")
