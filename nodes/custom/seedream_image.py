@@ -94,6 +94,10 @@ class GuaguaSeedreamImageNode:
                 return (download_image_as_tensor(image_url),)
             except Exception as exc:
                 last_exception = exc
+                adapted_payload = self._adapt_payload_for_exception(request_payload, exc)
+                if adapted_payload is not None:
+                    request_payload = adapted_payload
+                    continue
                 if attempt < SEEDREAM_MAX_RETRIES and self._is_retryable_exception(exc):
                     time.sleep(SEEDREAM_RETRY_DELAY_SECONDS)
                     continue
@@ -121,6 +125,25 @@ class GuaguaSeedreamImageNode:
             or "timeout" in message
             or "connection reset" in message
         )
+
+    def _adapt_payload_for_exception(self, payload: dict, exc: Exception) -> dict | None:
+        message = (str(exc).strip() or exc.__class__.__name__).lower()
+
+        if "`output_format`" in message and "not supported" in message and "output_format" in payload:
+            adapted = dict(payload)
+            adapted.pop("output_format", None)
+            return adapted
+
+        if (
+            "`sequential_image_generation`" in message
+            and "not supported" in message
+            and "sequential_image_generation" in payload
+        ):
+            adapted = dict(payload)
+            adapted.pop("sequential_image_generation", None)
+            return adapted
+
+        return None
 
 
 NODE_CLASS_MAPPINGS = {

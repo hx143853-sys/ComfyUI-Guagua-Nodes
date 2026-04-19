@@ -197,6 +197,45 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertEqual(result, ("tensor-image",))
         self.assertEqual(attempts["count"], 3)
 
+    def test_generate_image_retries_without_output_format_when_model_rejects_it(self):
+        attempts = {"count": 0}
+        captured_payloads = []
+
+        class FakeImages:
+            def generate(self, **kwargs):
+                attempts["count"] += 1
+                captured_payloads.append(dict(kwargs))
+                if attempts["count"] == 1:
+                    raise RuntimeError(
+                        "Error code: 400 - {'error': {'code': 'InvalidParameter', "
+                        "'message': 'The parameter `output_format` specified in the request is not valid: "
+                        "the parameter `output_format` is not supported by the current model.'}}"
+                    )
+                return {"data": [{"url": "https://example.com/image.png"}]}
+
+        fake_client = SimpleNamespace(images=FakeImages())
+
+        with patch("nodes.custom.seedream_image.create_ark_client", return_value=fake_client), patch(
+            "nodes.custom.seedream_image.download_image_as_tensor",
+            return_value="tensor-image",
+        ):
+            result = self.node.generate_image(
+                api_key="ark-key",
+                prompt="a frog astronaut",
+                model="doubao-seedream-4-5-251128",
+                resolution="2K",
+                aspect_ratio="1:1",
+                output_format="png",
+                seed=0,
+                guidance_scale=2.5,
+                watermark=True,
+            )
+
+        self.assertEqual(result, ("tensor-image",))
+        self.assertEqual(attempts["count"], 2)
+        self.assertIn("output_format", captured_payloads[0])
+        self.assertNotIn("output_format", captured_payloads[1])
+
     def test_too_many_reference_images_raises_cleanly(self):
         with patch(
             "nodes.custom.seedream_image.comfy_image_to_data_uris",
