@@ -4,7 +4,7 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from nodes.custom.seedream_image import GuaguaSeedreamImageNode
+from nodes.custom.seedream_image import GuaguaSeedreamImageNode, SEEDREAM_MODELS
 
 
 class SeedreamImageNodeTests(unittest.TestCase):
@@ -44,6 +44,10 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertNotIn("seed", captured)
         self.assertEqual(captured["watermark"], True)
         self.assertEqual(captured["output_format"], "png")
+
+    def test_supported_models_include_seedream_45_and_40(self):
+        self.assertIn("doubao-seedream-4-5-251128", SEEDREAM_MODELS)
+        self.assertIn("doubao-seedream-4-0-250828", SEEDREAM_MODELS)
 
     def test_generate_image_supports_optional_image_input(self):
         captured: dict[str, object] = {}

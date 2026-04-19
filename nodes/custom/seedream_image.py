@@ -14,6 +14,8 @@ from ..api_utils import (
 SEEDREAM_MODELS = [
     "doubao-seedream-5-0-lite-260128",
     "doubao-seedream-5-0-260128",
+    "doubao-seedream-4-5-251128",
+    "doubao-seedream-4-0-250828",
 ]
 
 SEEDREAM_RESOLUTION_PRESETS = ["2K", "3K"]

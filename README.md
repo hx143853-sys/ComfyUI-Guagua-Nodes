@@ -42,7 +42,7 @@ python -m pip install -r requirements.txt
 
 - `api_key`: 火山方舟 API Key
 - `prompt`: 文生图提示词
-- `model`: Seedream 5.0 模型下拉
+- `model`: Seedream 模型下拉，当前包含 `doubao-seedream-5-0-lite-260128`、`doubao-seedream-5-0-260128`、`doubao-seedream-4-5-251128`、`doubao-seedream-4-0-250828`
 - 可选 `IMAGE` 输入：不连线时是文生图；连 1 张图时按图生图提交；连入批量 `IMAGE` 时按多图融合提交，当前上限为 10 张参考图
 - `resolution`: 会直接作为请求里的 `size` 提交，当前支持 `2K` / `3K`
 - `aspect_ratio`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
