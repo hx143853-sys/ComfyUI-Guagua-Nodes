@@ -29,6 +29,28 @@ SEEDREAM_OUTPUT_FORMAT_MODELS = {
     "doubao-seedream-5-0-lite-260128",
     "doubao-seedream-5-0-260128",
 }
+SEEDREAM_SIZE_MAP = {
+    "2K": {
+        "1:1": "2048x2048",
+        "4:3": "2304x1728",
+        "3:4": "1728x2304",
+        "16:9": "2848x1600",
+        "9:16": "1600x2848",
+        "3:2": "2496x1664",
+        "2:3": "1664x2496",
+        "21:9": "3136x1344",
+    },
+    "3K": {
+        "1:1": "3072x3072",
+        "4:3": "3456x2592",
+        "3:4": "2592x3456",
+        "16:9": "4096x2304",
+        "9:16": "2304x4096",
+        "3:2": "3744x2496",
+        "2:3": "2496x3744",
+        "21:9": "4704x2016",
+    },
+}
 
 
 class _BaseGuaguaSeedreamImageNode:
@@ -79,11 +101,12 @@ class _BaseGuaguaSeedreamImageNode:
         resolved_model = self.FIXED_MODEL or model
         if not resolved_model:
             raise ValueError("model cannot be empty.")
+        resolved_size = self._resolve_size(resolution, aspect_ratio, resolved_model)
 
         request_payload = {
             "model": resolved_model,
             "prompt": clean_prompt,
-            "size": resolution,
+            "size": resolved_size,
             "watermark": bool(watermark),
         }
         if resolved_model in SEEDREAM_OUTPUT_FORMAT_MODELS:
@@ -126,6 +149,15 @@ class _BaseGuaguaSeedreamImageNode:
         if len(image_references) == 1:
             return image_references[0]
         return image_references
+
+    def _resolve_size(self, resolution: str, aspect_ratio: str, model: str) -> str:
+        if model == SEEDREAM_45_MODEL:
+            return resolution
+
+        try:
+            return SEEDREAM_SIZE_MAP[resolution][aspect_ratio]
+        except KeyError as exc:
+            raise ValueError(f"Unsupported Seedream size combination: {resolution} / {aspect_ratio}") from exc
 
     def _is_retryable_exception(self, exc: Exception) -> bool:
         message = (str(exc).strip() or exc.__class__.__name__).lower()

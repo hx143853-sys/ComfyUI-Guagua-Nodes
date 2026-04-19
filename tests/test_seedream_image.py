@@ -46,7 +46,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertEqual(result, ("tensor-image",))
         self.assertEqual(captured["model"], "doubao-seedream-5-0-lite-260128")
         self.assertEqual(captured["prompt"], "a frog astronaut")
-        self.assertEqual(captured["size"], "2K")
+        self.assertEqual(captured["size"], "2848x1600")
         self.assertNotIn("seed", captured)
         self.assertEqual(captured["watermark"], True)
         self.assertEqual(captured["output_format"], "png")
@@ -86,7 +86,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             )
 
         self.assertEqual(result, ("tensor-image",))
-        self.assertEqual(captured["size"], "3K")
+        self.assertEqual(captured["size"], "3072x3072")
         self.assertEqual(captured["image"], "data:image/png;base64,abc123")
         self.assertEqual(captured["output_format"], "jpeg")
         self.assertNotIn("sequential_image_generation", captured)
@@ -122,6 +122,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             captured["image"],
             ["data:image/png;base64,img1", "data:image/png;base64,img2"],
         )
+        self.assertEqual(captured["size"], "2304x1728")
         self.assertEqual(captured["sequential_image_generation"], "disabled")
 
     def test_generate_image_raises_when_response_has_no_url(self):
@@ -230,6 +231,15 @@ class SeedreamImageNodeTests(unittest.TestCase):
 
         self.assertEqual(result, ("tensor-image",))
         self.assertNotIn("output_format", captured)
+        self.assertEqual(captured["size"], "2K")
+
+    def test_resolve_size_uses_ratio_for_50_models(self):
+        size = self.node._resolve_size("2K", "3:2", "doubao-seedream-5-0-260128")
+        self.assertEqual(size, "2496x1664")
+
+    def test_resolve_size_uses_raw_resolution_for_45(self):
+        size = self.seedream_45_node._resolve_size("2K", "3:2", "doubao-seedream-4-5-251128")
+        self.assertEqual(size, "2K")
 
     def test_too_many_reference_images_raises_cleanly(self):
         with patch(

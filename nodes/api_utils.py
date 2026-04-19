@@ -68,7 +68,9 @@ def post_ark_json(
         "Authorization": f"Bearer {ensure_text(api_key, 'api_key')}",
     }
 
-    response = requests.post(url, headers=headers, json=payload, timeout=timeout)
+    session = requests.Session()
+    session.trust_env = False
+    response = session.post(url, headers=headers, json=payload, timeout=timeout)
     if response.ok:
         return response.json()
 
