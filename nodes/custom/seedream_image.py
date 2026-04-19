@@ -17,9 +17,12 @@ SEEDREAM_OUTPUT_FORMATS = ["png", "jpeg"]
 SEEDREAM_MAX_REFERENCE_IMAGES = 10
 SEEDREAM_MAX_RETRIES = 3
 SEEDREAM_RETRY_DELAY_SECONDS = 2.0
-SEEDREAM_50_MODEL = "doubao-seedream-5-0-260128"
-SEEDREAM_LITE_45_MODELS = [
+SEEDREAM_50_LITE_MODELS = [
     "doubao-seedream-5-0-lite-260128",
+    "doubao-seedream-5-0-260128",
+]
+SEEDREAM_45_MODEL = "doubao-seedream-4-5-251128"
+SEEDREAM_45_MODELS = [
     "doubao-seedream-4-5-251128",
 ]
 SEEDREAM_OUTPUT_FORMAT_MODELS = {
@@ -153,20 +156,20 @@ class _BaseGuaguaSeedreamImageNode:
         return None
 
 
-class GuaguaSeedream50ImageNode(_BaseGuaguaSeedreamImageNode):
-    FIXED_MODEL = SEEDREAM_50_MODEL
+class GuaguaSeedream50LiteImageNode(_BaseGuaguaSeedreamImageNode):
+    MODEL_OPTIONS = SEEDREAM_50_LITE_MODELS
 
 
-class GuaguaSeedreamLite45ImageNode(_BaseGuaguaSeedreamImageNode):
-    MODEL_OPTIONS = SEEDREAM_LITE_45_MODELS
+class GuaguaSeedream45ImageNode(_BaseGuaguaSeedreamImageNode):
+    FIXED_MODEL = SEEDREAM_45_MODEL
 
 
 NODE_CLASS_MAPPINGS = {
-    "Seedream 5.0 Image": GuaguaSeedream50ImageNode,
-    "Seedream Lite / 4.5 Image": GuaguaSeedreamLite45ImageNode,
+    "Seedream 5.0 / Lite Image": GuaguaSeedream50LiteImageNode,
+    "Seedream 4.5 Image": GuaguaSeedream45ImageNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Seedream 5.0 Image": "Seedream 5.0 Image",
-    "Seedream Lite / 4.5 Image": "Seedream Lite / 4.5 Image",
+    "Seedream 5.0 / Lite Image": "Seedream 5.0 / Lite Image",
+    "Seedream 4.5 Image": "Seedream 4.5 Image",
 }

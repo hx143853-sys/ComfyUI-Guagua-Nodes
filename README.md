@@ -4,8 +4,8 @@
 
 ## 当前节点
 
-- `Guagua🐸 Seedream 5.0 Image`
-- `Guagua🐸 Seedream Lite / 4.5 Image`
+- `Guagua🐸 Seedream 5.0 / Lite Image`
+- `Guagua🐸 Seedream 4.5 Image`
 - `Guagua🐸 Style Prompt Preset`
 - `Guagua🐸 Qwen Multimodal`
 - `Guagua🐸 Text Join`
@@ -35,15 +35,15 @@ python -m pip install -r requirements.txt
 
 ## 节点说明
 
-### 1. Guagua🐸 Seedream 5.0 Image
+### 1. Guagua🐸 Seedream 5.0 / Lite Image
 
-用途：调用火山方舟 Seedream 5.0 模型做文生图、图生图或多图融合，输出 `IMAGE`。
+用途：调用火山方舟 `doubao-seedream-5-0-260128` 或 `doubao-seedream-5-0-lite-260128` 做文生图、图生图或多图融合，输出 `IMAGE`。
 
 输入：
 
 - `api_key`: 火山方舟 API Key
 - `prompt`: 文生图提示词
-- 固定模型：`doubao-seedream-5-0-260128`
+- `model`: 仅支持 `doubao-seedream-5-0-lite-260128`、`doubao-seedream-5-0-260128`
 - 可选 `IMAGE` 输入：不连线时是文生图；连 1 张图时按图生图提交；连入批量 `IMAGE` 时按多图融合提交，当前上限为 10 张参考图
 - `resolution`: 会直接作为请求里的 `size` 提交，当前支持 `2K` / `3K`
 - `aspect_ratio`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
@@ -52,19 +52,19 @@ python -m pip install -r requirements.txt
 - `guidance_scale`: 当前仅为兼容旧工作流保留，不再参与 Seedream 5.0 请求体
 - `watermark`: 是否加水印
 
-### 2. Guagua🐸 Seedream Lite / 4.5 Image
+### 2. Guagua🐸 Seedream 4.5 Image
 
-用途：调用火山方舟 `doubao-seedream-5-0-lite-260128` 或 `doubao-seedream-4-5-251128` 做文生图、图生图或多图融合，输出 `IMAGE`。
+用途：调用火山方舟 `doubao-seedream-4-5-251128` 做文生图、图生图或多图融合，输出 `IMAGE`。
 
 输入：
 
 - `api_key`: 火山方舟 API Key
 - `prompt`: 文生图提示词
-- `model`: 仅支持 `doubao-seedream-5-0-lite-260128`、`doubao-seedream-4-5-251128`
+- 固定模型：`doubao-seedream-4-5-251128`
 - 可选 `IMAGE` 输入：不连线时是文生图；连 1 张图时按图生图提交；连入批量 `IMAGE` 时按多图融合提交，当前上限为 10 张参考图
 - `resolution`: 会直接作为请求里的 `size` 提交，当前支持 `2K` / `3K`
 - `aspect_ratio`: 当前仅为兼容旧工作流保留，不再参与请求体
-- `output_format`: `5.0-lite` 会发送该字段；`4.5` 默认不发送
+- `output_format`: 当前节点默认不向 `4.5` 请求体发送该字段
 - `seed`: 当前仅为兼容旧工作流保留，不再参与请求体
 - `guidance_scale`: 当前仅为兼容旧工作流保留，不再参与请求体
 - `watermark`: 是否加水印

@@ -5,17 +5,18 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from nodes.custom.seedream_image import (
-    GuaguaSeedream50ImageNode,
-    GuaguaSeedreamLite45ImageNode,
-    SEEDREAM_50_MODEL,
-    SEEDREAM_LITE_45_MODELS,
+    GuaguaSeedream45ImageNode,
+    GuaguaSeedream50LiteImageNode,
+    SEEDREAM_45_MODEL,
+    SEEDREAM_45_MODELS,
+    SEEDREAM_50_LITE_MODELS,
 )
 
 
 class SeedreamImageNodeTests(unittest.TestCase):
     def setUp(self):
-        self.node = GuaguaSeedream50ImageNode()
-        self.lite_45_node = GuaguaSeedreamLite45ImageNode()
+        self.node = GuaguaSeedream50LiteImageNode()
+        self.seedream_45_node = GuaguaSeedream45ImageNode()
 
     def test_generate_image_builds_expected_request(self):
         captured: dict[str, object] = {}
@@ -33,6 +34,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             result = self.node.generate_image(
                 api_key="ark-key",
                 prompt="a frog astronaut",
+                model="doubao-seedream-5-0-lite-260128",
                 resolution="2K",
                 aspect_ratio="16:9",
                 output_format="png",
@@ -42,7 +44,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             )
 
         self.assertEqual(result, ("tensor-image",))
-        self.assertEqual(captured["model"], SEEDREAM_50_MODEL)
+        self.assertEqual(captured["model"], "doubao-seedream-5-0-lite-260128")
         self.assertEqual(captured["prompt"], "a frog astronaut")
         self.assertEqual(captured["size"], "2K")
         self.assertNotIn("seed", captured)
@@ -50,11 +52,12 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertEqual(captured["output_format"], "png")
 
     def test_split_nodes_expose_expected_models(self):
-        self.assertEqual(SEEDREAM_50_MODEL, "doubao-seedream-5-0-260128")
         self.assertEqual(
-            SEEDREAM_LITE_45_MODELS,
-            ["doubao-seedream-5-0-lite-260128", "doubao-seedream-4-5-251128"],
+            SEEDREAM_50_LITE_MODELS,
+            ["doubao-seedream-5-0-lite-260128", "doubao-seedream-5-0-260128"],
         )
+        self.assertEqual(SEEDREAM_45_MODEL, "doubao-seedream-4-5-251128")
+        self.assertEqual(SEEDREAM_45_MODELS, ["doubao-seedream-4-5-251128"])
 
     def test_generate_image_supports_optional_image_input(self):
         captured: dict[str, object] = {}
@@ -72,6 +75,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             result = self.node.generate_image(
                 api_key="ark-key",
                 prompt="edit this frog into a superhero poster",
+                model="doubao-seedream-5-0-260128",
                 resolution="3K",
                 aspect_ratio="1:1",
                 output_format="jpeg",
@@ -103,6 +107,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             result = self.node.generate_image(
                 api_key="ark-key",
                 prompt="merge two frog references into one poster",
+                model="doubao-seedream-5-0-260128",
                 resolution="2K",
                 aspect_ratio="4:3",
                 output_format="png",
@@ -125,6 +130,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
                 self.node.generate_image(
                     api_key="ark-key",
                     prompt="a frog astronaut",
+                    model="doubao-seedream-5-0-260128",
                     resolution="2K",
                     aspect_ratio="1:1",
                     output_format="png",
@@ -141,6 +147,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
                 self.node.generate_image(
                     api_key="bad-key",
                     prompt="a frog astronaut",
+                    model="doubao-seedream-5-0-260128",
                     resolution="2K",
                     aspect_ratio="1:1",
                     output_format="png",
@@ -168,6 +175,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
             result = self.node.generate_image(
                 api_key="ark-key",
                 prompt="a frog astronaut",
+                model="doubao-seedream-5-0-260128",
                 resolution="2K",
                 aspect_ratio="1:1",
                 output_format="png",
@@ -181,7 +189,7 @@ class SeedreamImageNodeTests(unittest.TestCase):
 
     def test_adapt_payload_removes_unsupported_output_format(self):
         payload = {
-            "model": SEEDREAM_50_MODEL,
+            "model": "doubao-seedream-5-0-260128",
             "prompt": "a frog astronaut",
             "size": "2K",
             "output_format": "png",
@@ -209,10 +217,9 @@ class SeedreamImageNodeTests(unittest.TestCase):
             post_ark_json.side_effect = lambda api_key, endpoint_path, payload: (
                 captured.update(payload) or {"data": [{"url": "https://example.com/image.png"}]}
             )
-            result = self.lite_45_node.generate_image(
+            result = self.seedream_45_node.generate_image(
                 api_key="ark-key",
                 prompt="a frog astronaut",
-                model="doubao-seedream-4-5-251128",
                 resolution="2K",
                 aspect_ratio="1:1",
                 output_format="png",
