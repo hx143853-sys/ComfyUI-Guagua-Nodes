@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import time
+
 from ..api_utils import (
     comfy_image_to_data_uris,
     create_ark_client,
@@ -18,6 +20,8 @@ SEEDREAM_RESOLUTION_PRESETS = ["2K", "3K"]
 SEEDREAM_ASPECT_RATIOS = ["1:1", "4:3", "3:4", "16:9", "9:16", "3:2", "2:3", "21:9"]
 SEEDREAM_OUTPUT_FORMATS = ["png", "jpeg"]
 SEEDREAM_MAX_REFERENCE_IMAGES = 10
+SEEDREAM_MAX_RETRIES = 3
+SEEDREAM_RETRY_DELAY_SECONDS = 2.0
 
 
 class GuaguaSeedreamImageNode:
@@ -64,27 +68,37 @@ class GuaguaSeedreamImageNode:
 
         try:
             client = create_ark_client(api_key)
-            request_payload = {
-                "model": model,
-                "prompt": clean_prompt,
-                "size": resolution,
-                "watermark": bool(watermark),
-                "output_format": output_format,
-            }
-            if image is not None:
-                image_payload = self._prepare_reference_images(image)
-                request_payload["image"] = image_payload
-                if isinstance(image_payload, list):
-                    request_payload["sequential_image_generation"] = "disabled"
-
-            response = client.images.generate(**request_payload)
-            image_url = extract_first_image_url(response)
-            if not image_url:
-                raise RuntimeError("Seedream returned no image URL.")
-
-            return (download_image_as_tensor(image_url),)
         except Exception as exc:
             raise RuntimeError(format_api_exception("Seedream 5.0", exc)) from exc
+        request_payload = {
+            "model": model,
+            "prompt": clean_prompt,
+            "size": resolution,
+            "watermark": bool(watermark),
+            "output_format": output_format,
+        }
+        if image is not None:
+            image_payload = self._prepare_reference_images(image)
+            request_payload["image"] = image_payload
+            if isinstance(image_payload, list):
+                request_payload["sequential_image_generation"] = "disabled"
+
+        last_exception = None
+        for attempt in range(1, SEEDREAM_MAX_RETRIES + 1):
+            try:
+                response = client.images.generate(**request_payload)
+                image_url = extract_first_image_url(response)
+                if not image_url:
+                    raise RuntimeError("Seedream returned no image URL.")
+                return (download_image_as_tensor(image_url),)
+            except Exception as exc:
+                last_exception = exc
+                if attempt < SEEDREAM_MAX_RETRIES and self._is_retryable_exception(exc):
+                    time.sleep(SEEDREAM_RETRY_DELAY_SECONDS)
+                    continue
+                raise RuntimeError(format_api_exception("Seedream 5.0", exc)) from exc
+
+        raise RuntimeError(format_api_exception("Seedream 5.0", last_exception or RuntimeError("Unknown error")))
 
     def _prepare_reference_images(self, image) -> str | list[str]:
         image_references = comfy_image_to_data_uris(image, "PNG")
@@ -97,6 +111,15 @@ class GuaguaSeedreamImageNode:
         if len(image_references) == 1:
             return image_references[0]
         return image_references
+
+    def _is_retryable_exception(self, exc: Exception) -> bool:
+        message = (str(exc).strip() or exc.__class__.__name__).lower()
+        return (
+            "connection error" in message
+            or "timed out" in message
+            or "timeout" in message
+            or "connection reset" in message
+        )
 
 
 NODE_CLASS_MAPPINGS = {

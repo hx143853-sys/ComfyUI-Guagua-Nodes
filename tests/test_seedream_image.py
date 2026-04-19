@@ -162,6 +162,37 @@ class SeedreamImageNodeTests(unittest.TestCase):
         self.assertIn("Seedream 5.0 request failed", str(context.exception))
         self.assertIn("Invalid API key", str(context.exception))
 
+    def test_generate_image_retries_on_connection_error(self):
+        attempts = {"count": 0}
+
+        class FakeImages:
+            def generate(self, **kwargs):
+                attempts["count"] += 1
+                if attempts["count"] < 3:
+                    raise RuntimeError("Connection error., request_id: retry-me")
+                return {"data": [{"url": "https://example.com/image.png"}]}
+
+        fake_client = SimpleNamespace(images=FakeImages())
+
+        with patch("nodes.custom.seedream_image.create_ark_client", return_value=fake_client), patch(
+            "nodes.custom.seedream_image.download_image_as_tensor",
+            return_value="tensor-image",
+        ), patch("nodes.custom.seedream_image.time.sleep"):
+            result = self.node.generate_image(
+                api_key="ark-key",
+                prompt="a frog astronaut",
+                model="doubao-seedream-5-0-lite-260128",
+                resolution="2K",
+                aspect_ratio="1:1",
+                output_format="png",
+                seed=0,
+                guidance_scale=2.5,
+                watermark=True,
+            )
+
+        self.assertEqual(result, ("tensor-image",))
+        self.assertEqual(attempts["count"], 3)
+
     def test_too_many_reference_images_raises_cleanly(self):
         with patch(
             "nodes.custom.seedream_image.comfy_image_to_data_uris",

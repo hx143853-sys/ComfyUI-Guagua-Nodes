@@ -36,6 +36,12 @@ def ensure_text(value: str, field_name: str) -> str:
 
 def format_api_exception(provider_name: str, exc: Exception) -> str:
     message = str(exc).strip() or exc.__class__.__name__
+    lowered = message.lower()
+    if "connection error" in lowered or "timed out" in lowered or "timeout" in lowered:
+        message = (
+            f"{message} "
+            f"Please verify this machine can reach {DEFAULT_ARK_BASE_URL} and then retry."
+        )
     return f"{provider_name} request failed: {message}"
 
 
